@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<!-- saved from url=(0238)file:///Users/roryleg/Library/Application%20Support/Claude/local-agent-mode-sessions/6730616e-52c0-455a-9027-0e00a42de4b0/9458a444-7203-45aa-b745-6b7117a52ed0/local_e0c7c1eb-0a11-4b42-885a-c514fdc689f8/outputs/ava-insurance-prototype.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ava · Auto Insurance Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./Ava · Auto Insurance Prototype_files/css2" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+:root {
+  --primary:       #420085;
+  --primary-light: #A448FF;
+  --primary-mid:   #9F40FF;
+  --dark:          #2A1E39;
+  --text-light:    #736B7C;
+  --green:         #48A388;
+  --green-light:   #A9EACE;
+  --orange:        #FF7E17;
+  --bg:            #F8F8F8;
+  --white:         #FFFFFF;
+  --border:        rgba(0,0,0,0.07);
+  --shadow:        0 4px 10px rgba(28,9,50,0.05);
+  --font:          'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-number:   'Barlow Condensed', 'Impact', sans-serif;
+}
+
+* { font-family: var(--font); }
+
+body {
+  background: #1A0035;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  gap: 40px;
+}
+
+/* ── Phone Shell ── */
+.phone {
+  width: 375px;
+  min-width: 375px;
+  height: 812px;
+  background: var(--bg);
+  border-radius: 50px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 0 10px #1C0035, 0 0 0 12px #3A1A6B, 0 40px 100px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+}
+
+/* ── Screens ── */
+.screen { display: none; flex-direction: column; height: 100%; overflow-y: auto; overflow-x: hidden; }
+.screen.active { display: flex; animation: fadeSlide 0.28s ease; }
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.interstitial-spinner {
+  width: 44px; height: 44px;
+  border: 3.5px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes notifDrop {
+  from { opacity: 0; transform: translateY(-24px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Status Bar ── */
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px 0;
+  font-size: 15px; font-weight: 600; letter-spacing: -0.3px;
+  flex-shrink: 0; color: white;
+}
+.status-icons { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.status-bar.dark { color: var(--dark); }
+
+/* ── Ava Header ── */
+.ava-header {
+  background: var(--primary);
+  border-radius: 0 0 32px 32px;
+  padding-bottom: 20px;
+  flex-shrink: 0;
+}
+.header-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px 12px;
+}
+.header-title { font-size: 17px; font-weight: 600; color: white; text-align: center; flex: 1; }
+.back-btn {
+  background: none; border: none; color: rgba(255,255,255,0.75);
+  font-size: 15px; font-weight: 600; cursor: pointer; padding: 4px 0;
+}
+
+/* ── Score Card ── */
+.score-card {
+  margin: 0 16px; background: white; border-radius: 20px;
+  padding: 16px; display: flex; align-items: center; gap: 12px;
+}
+.score-text { flex: 1; }
+.score-label { font-size: 16px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+.score-sub { font-size: 14px; color: var(--text-light); margin-top: 2px; }
+.score-link { font-size: 12px; font-weight: 700; color: var(--primary-light); margin-top: 8px; }
+.score-ring { width: 72px; height: 72px; position: relative; flex-shrink: 0; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-big { font-family: var(--font-number); font-size: 26px; font-weight: 700; color: var(--dark); line-height: 1; }
+.score-tier { font-size: 8px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* ── Badges ── */
+.badge-orange { background: var(--orange); color: white; font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 20px; white-space: nowrap; }
+.badge-purple { background: var(--primary-light); color: white; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-green  { background: var(--green-light); color: #2A6A55; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.badge-new    { background: var(--primary); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.5px; }
+
+/* ── Content area ── */
+.content { flex: 1; overflow-y: auto; padding-bottom: 4px; }
+
+/* ── Section header ── */
+.section-header { padding: 20px 8px 4px; margin: 0 8px; font-size: 23px; font-weight: 750; color: var(--dark); letter-spacing: -0.4px; line-height: 28px; }
+
+/* ── Card ── */
+.card { background: white; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 8px; overflow: hidden; }
+.card-inner { padding: 20px; }
+
+/* ── Row ── */
+.row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: none; }
+.row-label { font-size: 16px; color: var(--dark); }
+.row-value { font-size: 16px; font-weight: 700; color: var(--dark); }
+
+/* ── Insurance Notification ── */
+.insurance-notif {
+  background: white; border-radius: 16px;
+  border: 1.5px solid rgba(164,72,255,0.2);
+  box-shadow: 0 4px 16px rgba(66,0,133,0.1);
+  padding: 16px; cursor: pointer; transition: transform 0.12s; margin-bottom: 8px;
+}
+.insurance-notif:active { transform: scale(0.99); }
+.notif-icon-wrap { width: 40px; height: 40px; background: rgba(164,72,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.notif-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.notif-body { font-size: 14px; color: var(--text-light); line-height: 1.4; }
+.notif-cta { margin-top: 12px; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--primary-light); }
+
+/* ── Buttons ── */
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  padding: 14px 24px; background: var(--primary-mid); color: white;
+  font-size: 16px; font-weight: 700; border-radius: 24px; border: none;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(159,64,255,0.35);
+  transition: transform 0.1s; text-align: center;
+}
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  padding: 14px; background: transparent; color: var(--primary-light);
+  font-size: 16px; font-weight: 700; border-radius: 24px; border: none;
+  cursor: pointer; transition: opacity 0.1s;
+}
+.btn-ghost:active { opacity: 0.6; }
+.btn-white {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  padding: 12px 24px; background: white; color: var(--dark);
+  font-size: 16px; font-weight: 700; border-radius: 12px; border: none; cursor: pointer;
+}
+
+/* ── Bottom Nav ── */
+.bottom-nav { background: white; border-top: 1px solid rgba(0,0,0,0.1); display: flex; padding: 10px 0 28px; flex-shrink: 0; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; font-weight: 600; color: var(--text-light); letter-spacing: 0.2px; }
+.nav-item.active { color: var(--dark); }
+.nav-icon { font-size: 22px; line-height: 1; }
+
+/* ── Carrier Logo Badge ── */
+.carrier-logo {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: white; border: 1.5px solid rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0; position: relative;
+}
+.carrier-logo img { width: 30px; height: 30px; object-fit: contain; display: block; }
+.carrier-logo .fb { /* fallback */
+  position: absolute; inset: 0; display: none;
+  align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: white; letter-spacing: -0.3px;
+}
+/* large logo variant for header/detected pill */
+.carrier-logo-lg {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: white; border: 1px solid rgba(0,0,0,0.1);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0; position: relative;
+}
+.carrier-logo-lg img { width: 28px; height: 28px; object-fit: contain; }
+
+/* ── Quote Cards ── */
+.quote-card {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  background: white; border-radius: 16px; box-shadow: var(--shadow);
+  margin-bottom: 8px; cursor: pointer; border: 2px solid transparent;
+  transition: transform 0.12s; position: relative;
+}
+.quote-card:active { transform: scale(0.99); }
+.quote-card.recommended { border-color: var(--green); }
+.quote-card.dimmed { opacity: 0.5; cursor: default; }
+.carrier-badge { width: 44px; height: 44px; border-radius: 12px; font-size: 13px; font-weight: 800; color: white; display: flex; align-items: center; justify-content: center; letter-spacing: -0.3px; flex-shrink: 0; }
+.quote-info { flex: 1; }
+.carrier-name { font-size: 16px; font-weight: 700; color: var(--dark); }
+.carrier-sub  { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+.quote-right  { text-align: right; }
+.price-big    { font-size: 20px; font-weight: 800; color: var(--dark); line-height: 1.1; }
+.price-mo     { font-size: 12px; font-weight: 400; color: var(--text-light); }
+.pick-tag { position: absolute; top: -1px; left: 12px; background: var(--green); color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 0 0 8px 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* ── Detected pill ── */
+.detected-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(72,163,136,0.12); border: 1px solid rgba(72,163,136,0.25); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: #2A6A55; }
+
+/* ── Pre-filled field ── */
+.field-wrap { margin-bottom: 10px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+.field-auto-tag { font-size: 10px; font-weight: 700; color: var(--primary-light); letter-spacing: 0.3px; text-transform: none; }
+.field-value { background: rgba(164,72,255,0.08); border: 1.5px solid rgba(164,72,255,0.15); border-radius: 12px; padding: 12px 14px; font-size: 15px; font-weight: 500; color: var(--dark); width: 100%; }
+.field-value.plain { background: var(--bg); border-color: transparent; }
+
+/* ── Select field ── */
+.field-select {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+  font-size: 15px; font-weight: 500; color: var(--dark);
+  width: 100%; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23736B7C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+/* ── Coverage connect option ── */
+.connect-option {
+  background: white; border-radius: 16px; border: 2px solid transparent;
+  padding: 16px; cursor: pointer; transition: border-color 0.15s, transform 0.12s;
+  box-shadow: var(--shadow); margin-bottom: 10px; display: flex; gap: 14px; align-items: center;
+}
+.connect-option:active { transform: scale(0.99); }
+.connect-option.primary-opt { border-color: var(--primary-light); }
+.connect-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.connect-title { font-size: 16px; font-weight: 700; color: var(--dark); }
+.connect-sub   { font-size: 13px; color: var(--text-light); margin-top: 3px; line-height: 1.4; }
+
+/* ── Manual form toggle ── */
+.manual-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px; color: var(--text-light); font-size: 14px; font-weight: 600;
+  cursor: pointer; border-radius: 12px; transition: background 0.15s;
+}
+.manual-toggle:hover { background: rgba(0,0,0,0.04); }
+.manual-form { display: none; margin-top: 8px; }
+.manual-form.open { display: block; }
+
+/* ── Autopilot ── */
+.auto-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.auto-item:last-child { border-bottom: none; }
+.auto-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.auto-title { font-size: 15px; font-weight: 700; color: white; }
+.auto-sub   { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; line-height: 1.4; }
+
+/* ── Progress track ── */
+.progress-track { height: 8px; background: var(--green-light); border-radius: 99px; overflow: hidden; }
+.progress-fill  { height: 100%; background: var(--green); border-radius: 99px; }
+
+/* ── Coverage Transfer card ── */
+.transfer-card {
+  background: white; border-radius: 16px; box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 8px;
+}
+/* Row-based pattern matching actual Ava list items */
+.transfer-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+}
+.transfer-row:last-child { border-bottom: none; }
+.transfer-check-circle {
+  width: 28px; height: 28px; background: var(--green-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.transfer-row-label { font-size: 15px; font-weight: 700; color: var(--dark); }
+.transfer-row-sub   { font-size: 13px; color: var(--text-light); margin-top: 2px; line-height: 1.4; }
+.transfer-row-right { margin-left: auto; text-align: right; font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+/* ── inline SVG icon helpers ── */
+.svg-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* ── Success header ── */
+.success-header {
+  background: var(--primary);
+  border-radius: 0 0 24px 24px;
+  padding-bottom: 24px; flex-shrink: 0; text-align: center;
+}
+
+/* ── Sidebar ── */
+.sidebar { color: rgba(255,255,255,0.85); width: 220px; flex-shrink: 0; align-self: flex-start; position: sticky; top: 24px; }
+.sidebar-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+.step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; cursor: pointer; opacity: 0.4; transition: opacity 0.2s; }
+.step.active { opacity: 1; }
+.step.done   { opacity: 0.65; }
+.step-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; transition: background 0.2s, border-color 0.2s; }
+.step.active .step-dot { background: var(--primary-light); border-color: var(--primary-light); }
+.step.done   .step-dot { background: var(--green); border-color: var(--green); font-size: 11px; }
+.step-body strong { font-size: 14px; font-weight: 700; display: block; margin-bottom: 3px; color: white; }
+.step-body span   { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.sidebar-note { margin-top: 24px; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+.sidebar-note-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+
+/* helpers */
+.link-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 0; font-size: 16px; font-weight: 700; color: var(--primary-light); cursor: pointer; }
+.divider-or { display: flex; align-items: center; gap: 12px; color: var(--text-light); font-size: 13px; margin: 4px 0 10px; }
+.divider-or::before, .divider-or::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── Auto-switch screen ── */
+.countdown-ring { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
+.countdown-ring svg { transform: rotate(-90deg); }
+.countdown-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.countdown-num { font-family: var(--font-number); font-size: 24px; font-weight: 700; color: white; line-height: 1; }
+.countdown-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
+
+.switch-strip {
+  display: flex; align-items: center; gap: 0;
+  background: white; border-radius: 16px; box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 8px;
+}
+.switch-col { flex: 1; padding: 16px; }
+.switch-col + .switch-col { border-left: 1px solid var(--border); }
+.switch-col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 6px; }
+.switch-col-carrier { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+.switch-col-price { font-family: var(--font-number); font-size: 30px; font-weight: 700; line-height: 1; }
+.switch-arrow { padding: 0 4px; color: var(--text-light); font-size: 18px; flex-shrink: 0; }
+
+.opt-out-btn {
+  width: 100%; padding: 14px; background: none; border: none;
+  font-size: 14px; font-weight: 600; color: var(--text-light);
+  cursor: pointer; text-align: center; border-radius: 12px;
+  transition: background 0.15s;
+}
+.opt-out-btn:hover { background: rgba(0,0,0,0.04); }
+.opt-out-btn.danger { color: #C0392B; }
+
+.notif-banner {
+  background: rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 0 16px;
+}
+.notif-app-icon { width: 36px; height: 36px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.notif-banner-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 2px; }
+.notif-banner-body  { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ PHONE ═══════════════ -->
+<div class="phone">
+
+  <!-- ══ S1: Ava Home (Horizon-style) ══ -->
+  <div class="screen active" id="s1">
+    <div style="flex:1;display:flex;flex-direction:column;background:#F2F2F7;overflow:hidden;">
+
+      <!-- Purple header -->
+      <div style="background:var(--primary);padding:0 20px 20px;flex-shrink:0;">
+        <!-- Status bar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;color:white;">
+          <span style="font-size:15px;font-weight:600;">9:41</span>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="white" opacity="0.9"><rect x="0" y="4" width="3" height="8" rx="1"></rect><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"></rect><rect x="9" y="0" width="3" height="12" rx="1"></rect><rect x="13.5" y="1.5" width="3" height="10.5" rx="1" opacity="0.35"></rect></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none" opacity="0.9"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity="0.5"></rect><rect x="2" y="2" width="17" height="8" rx="2" fill="white"></rect><path d="M24 4.5V7.5C24.8 7.2 25.5 6.5 25.5 6C25.5 5.5 24.8 4.8 24 4.5Z" fill="white" opacity="0.5"></path></svg>
+          </div>
+        </div>
+        <!-- Nav row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="9" r="3" stroke="white" stroke-width="1.5"></circle><path d="M4 19c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          <div style="font-size:17px;font-weight:700;color:white;letter-spacing:-0.3px;">Today</div>
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3c-3.866 0-7 3.134-7 7 0 5.25 7 12 7 12s7-6.75 7-12c0-3.866-3.134-7-7-7z" stroke="white" stroke-width="1.5"></path><circle cx="11" cy="10" r="2.5" stroke="white" stroke-width="1.5"></circle></svg>
+        </div>
+        <!-- Credit score card -->
+        <div style="background:white;border-radius:16px;padding:14px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;">
+              <span style="font-size:13px;color:#333;font-weight:500;">Current Score</span>
+              <span style="background:var(--orange);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;">+18 pts</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-light);">Experian · Updated today</div>
+            <div style="margin-top:10px;"><span style="font-size:13px;font-weight:600;color:var(--primary);">View details</span></div>
+          </div>
+          <!-- Orange ring SVG -->
+          <div style="position:relative;width:72px;height:72px;">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" fill="none" stroke="#F0F0F0" stroke-width="6"></circle>
+              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--orange)" stroke-width="6" stroke-dasharray="188.5" stroke-dashoffset="72" stroke-linecap="round" transform="rotate(-90 36 36)"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;">
+              <div style="font-size:20px;font-weight:800;color:#1A0035;">672</div>
+              <div style="font-size:10px;color:var(--text-light);margin-top:2px;">Good</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable content -->
+      <div style="flex:1;overflow-y:auto;padding:20px 16px 16px;">
+
+        <!-- Build credit -->
+        <div style="font-size:18px;font-weight:800;color:#1A0035;margin-bottom:10px;">Build credit</div>
+        <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:600;color:#1A0035;">Ava tradelines</div>
+            <div style="background:var(--primary);color:white;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:0.3px;">MEMBER BENEFIT</div>
+          </div>
+          <div style="display:flex;justify-content:space-around;text-align:center;">
+            <!-- Ava Card tradeline (active) -->
+            <div>
+              <div style="width:48px;height:48px;border-radius:14px;background:#EDE8FF;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="6" width="18" height="13" rx="2.5" stroke="#420085" stroke-width="1.5"></rect><path d="M2 10h18" stroke="#420085" stroke-width="1.5"></path><rect x="5" y="13" width="4" height="2" rx="1" fill="#420085"></rect></svg>
+                <div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#1A0035;">Ava Card</div>
+            </div>
+            <!-- Rent (inactive / add) -->
+            <div>
+              <div style="width:48px;height:48px;border-radius:14px;background:#F7F7F7;border:1.5px dashed #D8D8D8;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 10.5L11 3l9 7.5V19a1 1 0 01-1 1H14v-5h-4v5H3a1 1 0 01-1-1v-8.5z" stroke="#ccc" stroke-width="1.5"></path></svg>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#736B7C;">Rent</div>
+            </div>
+            <!-- Ava Loan (active) -->
+            <div>
+              <div style="width:48px;height:48px;border-radius:14px;background:#EDE8FF;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7.5" stroke="#420085" stroke-width="1.5"></circle><path d="M11 7v8M8.5 9c0-.8.7-1.5 1.5-1.5h2c.8 0 1.5.7 1.5 1.5S13.3 10.5 12.5 10.5H10c-.8 0-1.5.6-1.5 1.4s.7 1.6 1.5 1.6h3" stroke="#420085" stroke-width="1.3" stroke-linecap="round"></path></svg>
+                <div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#1A0035;">Ava Loan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ava Card -->
+        <div style="font-size:18px;font-weight:800;color:#1A0035;margin-bottom:10px;">Ava Card</div>
+        <div style="background:linear-gradient(135deg,#5D0FC0,var(--primary));border-radius:20px 20px 0 0;padding:20px;">
+          <div style="font-family:var(--font-number);font-size:38px;font-weight:800;color:white;letter-spacing:3px;margin-bottom:16px;">ava</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Rory Joyce</div>
+          <div style="font-size:14px;color:white;letter-spacing:2px;">4561  2984  8723  7856</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;">
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Total due</div><div style="font-size:22px;font-weight:800;color:white;line-height:1.1;">$23.47</div></div>
+            <div style="background:white;color:var(--primary);font-size:13px;font-weight:700;padding:8px 20px;border-radius:20px;cursor:pointer;">Pay now</div>
+          </div>
+        </div>
+        <div style="background:white;border-radius:0 0 16px 16px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #F2F2F7;font-size:13px;"><span style="color:var(--text-light);">Due Date</span><span style="font-weight:600;color:#1A0035;">November 5</span></div>
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #F2F2F7;font-size:13px;"><span style="color:var(--text-light);">Autopay</span><span style="font-weight:600;color:var(--green);">Enabled</span></div>
+          <div style="text-align:center;padding:12px 0;"><span style="font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">View details</span></div>
+        </div>
+
+        <!-- More benefits — insurance surfaced here -->
+        <div style="font-size:18px;font-weight:800;color:#1A0035;margin-bottom:10px;">More benefits</div>
+        <div onclick="goTo(&#39;s2&#39;)" style="background:white;border-radius:16px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);cursor:pointer;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:52px;height:52px;background:#EDE8FF;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <!-- Car SVG icon -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 16l2-6h14l2 6" stroke="#420085" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><rect x="4" y="16" width="20" height="6" rx="2" stroke="#420085" stroke-width="1.5"></rect><circle cx="9" cy="22" r="1.5" fill="#420085"></circle><circle cx="19" cy="22" r="1.5" fill="#420085"></circle><path d="M8 10h12" stroke="#420085" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:var(--primary-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Free Subscriber Benefit</div>
+            <div style="font-size:15px;font-weight:700;color:#1A0035;line-height:1.3;margin-bottom:4px;">Save up to $63/mo on auto insurance</div>
+            <div style="font-size:13px;color:var(--text-light);line-height:1.4;">Your score hit 672 — you qualify for better rates. We found 5 quotes.</div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="margin-top:4px;flex-shrink:0;"><path d="M6 13l5-4-5-4" stroke="#B0A8BC" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        </div>
+
+        <!-- Activity -->
+        <div style="font-size:18px;font-weight:800;color:#1A0035;margin-bottom:10px;">Activity</div>
+        <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #F2F2F7;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:#EDFAF4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 14V4M5 8l4-4 4 4" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </div>
+              <div><div style="font-size:13px;font-weight:600;color:#1A0035;">Ava boosted your score</div><div style="font-size:12px;color:var(--text-light);">June 15</div></div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--green);">+20 pts</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #F2F2F7;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:#EDFAF4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 14V4M5 8l4-4 4 4" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </div>
+              <div><div style="font-size:13px;font-weight:600;color:#1A0035;">Ava boosted your score</div><div style="font-size:12px;color:var(--text-light);">May 28</div></div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--green);">+18 pts</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:#FFF4EC;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="5" width="14" height="10" rx="2" stroke="#FF7E17" stroke-width="1.4"></rect><path d="M2 8h14" stroke="#FF7E17" stroke-width="1.4"></path><rect x="5" y="11" width="3" height="1.5" rx="0.75" fill="#FF7E17"></rect></svg>
+              </div>
+              <div><div style="font-size:13px;font-weight:600;color:#1A0035;">Card payment processed</div><div style="font-size:12px;color:var(--text-light);">May 15</div></div>
+            </div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-light);">$23.47</div>
+          </div>
+        </div>
+        <div style="height:12px;"></div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div style="background:white;border-top:1px solid #E8E8E8;display:flex;padding:10px 0 22px;flex-shrink:0;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 9.5L11 2l9 7.5V19a1 1 0 01-1 1H14v-5h-4v5H3a1 1 0 01-1-1V9.5z" fill="var(--primary)"></path></svg>
+          <span style="font-size:10px;font-weight:700;color:var(--primary);">Home</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.38;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="6" width="16" height="12" rx="2" stroke="#736B7C" stroke-width="1.5"></rect><path d="M7 6V5a4 4 0 018 0v1" stroke="#736B7C" stroke-width="1.5"></path></svg>
+          <span style="font-size:10px;font-weight:600;color:#736B7C;">Loan</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.38;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="#736B7C" stroke-width="1.5"></circle><path d="M11 7v4l3 2" stroke="#736B7C" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          <span style="font-size:10px;font-weight:600;color:#736B7C;">Debt</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.38;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 7h14M4 11h10M4 15h6" stroke="#736B7C" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          <span style="font-size:10px;font-weight:600;color:#736B7C;">Offers</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ S2: Coverage Verification ══ -->
+  <div class="screen" id="s2">
+    <div class="ava-header">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span style="opacity:0.6;font-size:13px;">●●●</span></div>
+      </div>
+      <div class="header-bar">
+        <button class="back-btn" onclick="goTo(&#39;s1&#39;)">← Back</button>
+        <div class="header-title">Verify coverage</div>
+        <div style="width:44px;"></div>
+      </div>
+      <!-- Detected summary -->
+      <div style="margin:0 16px;background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+        <div class="carrier-logo-lg">
+          <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon.png" alt="State Farm" onerror="this.style.display=&#39;none&#39;;this.parentNode.style.background=&#39;#C41230&#39;;this.parentNode.innerHTML+=&#39;&lt;span style=\&#39;font-size:10px;font-weight:800;color:white;\&#39;&gt;SF&lt;/span&gt;&#39;">
+        </div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:white;">State Farm · $187/mo</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.65);margin-top:2px;display:flex;align-items:center;gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z" stroke="rgba(255,255,255,0.65)" stroke-width="1.2"></path><path d="M6.5 4.5v2l1.5 1" stroke="rgba(255,255,255,0.65)" stroke-width="1.2" stroke-linecap="round"></path></svg>
+            Detected from Chase checking · Jul 15
+          </div>
+        </div>
+        <div style="margin-left:auto;"><div class="badge-green">Found</div></div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+
+    <div class="content" style="padding:16px;">
+      <div style="font-size:15px;color:var(--text-light);line-height:1.5;margin-bottom:18px;">
+        We detected your carrier and payment from your bank. Now we need your <strong style="color:var(--dark);">current coverage details</strong> to find a matching quote.
+      </div>
+
+      <!-- ★ Credential entry (primary) ★ -->
+      <div style="background:white;border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px;border:2px solid rgba(164,72,255,0.3);">
+        <!-- Card header -->
+        <div style="background:rgba(164,72,255,0.06);padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);">
+          <div class="carrier-logo" style="width:36px;height:36px;border-radius:10px;">
+            <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon.png" alt="State Farm" style="width:24px;height:24px;" onerror="this.style.display=&#39;none&#39;;this.parentNode.style.background=&#39;#C41230&#39;;this.parentNode.innerHTML=&#39;&lt;span style=\&#39;font-size:10px;font-weight:800;color:white;\&#39;&gt;SF&lt;/span&gt;&#39;">
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--dark);">Log in to State Farm</div>
+            <div style="font-size:12px;color:var(--text-light);">Ava pulls your coverage — read-only access</div>
+          </div>
+        </div>
+        <!-- Login form -->
+        <div style="padding:16px;">
+          <div class="field-wrap">
+            <div class="field-label">Email or username</div>
+            <input type="email" placeholder="you@email.com" style="background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--dark);width:100%;outline:none;font-family:var(--font);">
+          </div>
+          <div class="field-wrap" style="margin-bottom:0;">
+            <div class="field-label">Password</div>
+            <input type="password" placeholder="••••••••" style="background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--dark);width:100%;outline:none;font-family:var(--font);">
+          </div>
+        </div>
+        <div style="padding:0 16px 16px;">
+          <button class="btn-primary" onclick="goTo(&#39;s2b&#39;)" style="margin-top:0;">Connect &amp; pull my coverage →</button>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-light);text-align:center;margin-bottom:16px;line-height:1.6;padding:0 4px;display:flex;align-items:center;justify-content:center;gap:5px;">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="2.5" y="5" width="7" height="5.5" rx="1.5" stroke="#736B7C" stroke-width="1.2"></rect><path d="M4 5V3.5a2 2 0 014 0V5" stroke="#736B7C" stroke-width="1.2" stroke-linecap="round"></path></svg>
+        Read-only · We never modify your policy · Credentials are used once and not stored
+      </div>
+
+      <div class="divider-or">or enter manually</div>
+
+      <!-- Manual toggle -->
+      <div class="manual-toggle" id="manualToggle" onclick="toggleManual()">
+        <span>Enter my coverage details instead</span>
+        <svg id="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transition:transform 0.2s;"><path d="M4 6l4 4 4-4" stroke="#736B7C" stroke-width="1.5" stroke-linecap="round"></path></svg>
+      </div>
+
+      <!-- Manual form -->
+      <div class="manual-form" id="manualForm">
+        <div class="card" style="margin-top:8px;">
+          <div class="card-inner">
+            <div style="font-size:13px;color:var(--text-light);margin-bottom:14px;line-height:1.5;">
+              Find these on your declarations page or policy documents.
+            </div>
+            <div class="field-wrap">
+              <div class="field-label">Bodily Injury Liability</div>
+              <select class="field-select"><option>100/300k (recommended)</option><option>50/100k</option><option>25/50k</option><option>250/500k</option></select>
+            </div>
+            <div class="field-wrap">
+              <div class="field-label">Property Damage</div>
+              <select class="field-select"><option>$100,000</option><option>$50,000</option><option>$25,000</option></select>
+            </div>
+            <div class="field-wrap">
+              <div class="field-label">Collision deductible</div>
+              <select class="field-select"><option>$500</option><option>$250</option><option>$1,000</option><option>None</option></select>
+            </div>
+            <div class="field-wrap">
+              <div class="field-label">Comprehensive deductible</div>
+              <select class="field-select"><option>$500</option><option>$250</option><option>$1,000</option><option>None</option></select>
+            </div>
+            <div class="field-wrap" style="margin-bottom:0;">
+              <div class="field-label">Uninsured / Underinsured Motorist</div>
+              <select class="field-select"><option>Included</option><option>Not included</option></select>
+            </div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="goTo(&#39;s3&#39;)" style="margin-top:8px;">Find matching quotes →</button>
+      </div>
+
+      <div style="height:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ S2b: Interstitial — pulling coverage ══ -->
+  <div class="screen" id="s2b">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:white;gap:28px;padding:24px;">
+      <div style="background:var(--primary);border-radius:28px;padding:28px 24px;width:260px;display:flex;flex-direction:column;align-items:center;gap:24px;">
+        <div style="background:#0D0022;border-radius:18px;width:212px;height:112px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,0.4);">
+          <div style="text-align:center;">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:0.5px;margin-bottom:10px;text-transform:uppercase;">Connecting to</div>
+            <div style="width:48px;height:48px;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+              <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon.png" width="34" height="34" style="object-fit:contain;" onerror="this.style.display=&#39;none&#39;;this.parentNode.style.background=&#39;#C41230&#39;;this.parentNode.innerHTML=&#39;&lt;span style=\&#39;font-size:11px;font-weight:800;color:white;\&#39;&gt;SF&lt;/span&gt;&#39;">
+            </div>
+            <div style="font-size:22px;font-weight:800;color:white;letter-spacing:-0.5px;">State Farm</div>
+          </div>
+        </div>
+        <div class="interstitial-spinner"></div>
+      </div>
+      <div style="font-size:16px;font-weight:500;color:var(--dark);text-align:center;line-height:1.6;">Pulling your coverage details...</div>
+    </div>
+  </div>
+
+  <!-- ══ S3: Quotes ══ -->
+  <div class="screen" id="s3">
+    <div class="ava-header">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span style="opacity:0.6;font-size:13px;">●●●</span></div>
+      </div>
+      <div class="header-bar">
+        <button class="back-btn" onclick="goTo(&#39;s2&#39;)">← Back</button>
+        <div class="header-title">Auto Insurance</div>
+        <div style="width:44px;"></div>
+      </div>
+      <div style="text-align:center;padding:4px 20px 0;">
+        <div style="font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:4px;">Your credit improvement means</div>
+        <div style="font-family:var(--font-number);font-size:64px;font-weight:700;color:var(--green-light);line-height:1;letter-spacing:-1px;">$63<span style="font-size:28px;font-family:var(--font);font-weight:700;">/mo</span></div>
+        <div style="font-size:15px;color:rgba(255,255,255,0.7);margin-top:4px;">in potential savings · $756/year</div>
+      </div>
+      <div style="height:18px;"></div>
+    </div>
+
+    <div class="content" style="padding:16px;">
+
+      <!-- Coverage baseline + edit -->
+      <div style="background:rgba(72,163,136,0.08);border:1px solid rgba(72,163,136,0.2);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:13px;color:#2A6A55;line-height:1.4;display:flex;flex-direction:column;gap:3px;">
+          <span style="display:flex;align-items:center;gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3 3 6-6" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            Quotes match your State Farm coverage
+          </span>
+          <span style="font-size:12px;color:var(--text-light);padding-left:18px;">100/300k liability · $500 deductible · UM included</span>
+        </div>
+        <div onclick="goTo(&#39;s2&#39;)" style="font-size:13px;font-weight:700;color:var(--primary-light);cursor:pointer;white-space:nowrap;margin-left:12px;">Edit ✎</div>
+      </div>
+
+      <!-- Recommended: Progressive -->
+      <div class="quote-card recommended" onclick="goTo(&#39;s4&#39;)" style="padding-top:22px;">
+        <div class="pick-tag">AVA'S PICK</div>
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(1).png" alt="Progressive" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;">
+          <div class="fb" style="background:#0566B5;">PRG</div>
+        </div>
+        <div class="quote-info">
+          <div class="carrier-name">Progressive</div>
+          <div class="carrier-sub">A+ rated · In-app bind</div>
+        </div>
+        <div class="quote-right">
+          <div class="price-big">$124<span class="price-mo">/mo</span></div>
+          <span class="badge-green">Save $63/mo</span>
+        </div>
+      </div>
+
+      <div class="quote-card" onclick="goTo(&#39;s4&#39;)">
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(2).png" alt="GEICO" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;">
+          <div class="fb" style="background:#003087;">GEI</div>
+        </div>
+        <div class="quote-info"><div class="carrier-name">GEICO</div><div class="carrier-sub">A++ rated · In-app bind</div></div>
+        <div class="quote-right"><div class="price-big">$133<span class="price-mo">/mo</span></div><span class="badge-green">Save $54/mo</span></div>
+      </div>
+
+      <div class="quote-card" onclick="goTo(&#39;s4&#39;)">
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/liberty-social-icon.png" alt="Liberty Mutual" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;" style="display: none;">
+          <div class="fb" style="background: rgb(0, 47, 108); display: flex;">LM</div>
+        </div>
+        <div class="quote-info"><div class="carrier-name">Liberty Mutual</div><div class="carrier-sub">A rated · In-app bind</div></div>
+        <div class="quote-right"><div class="price-big">$142<span class="price-mo">/mo</span></div><span class="badge-green">Save $45/mo</span></div>
+      </div>
+
+      <div class="quote-card" onclick="goTo(&#39;s4&#39;)">
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/mercury-insurance-logo.svg" alt="Mercury" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;">
+          <div class="fb" style="background:#1C3A5E;">MCY</div>
+        </div>
+        <div class="quote-info"><div class="carrier-name">Mercury</div><div class="carrier-sub">A rated · In-app bind</div></div>
+        <div class="quote-right"><div class="price-big">$156<span class="price-mo">/mo</span></div><span class="badge-green">Save $31/mo</span></div>
+      </div>
+
+      <div class="quote-card" onclick="goTo(&#39;s4&#39;)">
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/travelers-logo.png" alt="Travelers" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;">
+          <div class="fb" style="background:#C41230;">TRV</div>
+        </div>
+        <div class="quote-info"><div class="carrier-name">Travelers</div><div class="carrier-sub">A++ rated · In-app bind</div></div>
+        <div class="quote-right"><div class="price-big">$161<span class="price-mo">/mo</span></div><span class="badge-green">Save $26/mo</span></div>
+      </div>
+
+      <!-- Current plan — State Farm -->
+      <div class="quote-card dimmed">
+        <div class="carrier-logo">
+          <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon.png" alt="State Farm" onerror="this.style.display=&#39;none&#39;;this.parentNode.querySelector(&#39;.fb&#39;).style.display=&#39;flex&#39;">
+          <div class="fb" style="background:#C41230;">SF</div>
+        </div>
+        <div class="quote-info"><div class="carrier-name">State Farm</div><div class="carrier-sub">Current plan</div></div>
+        <div class="quote-right"><div class="price-big" style="color:#C0392B;">$187<span class="price-mo">/mo</span></div><span style="font-size:11px;color:var(--text-light);">Overpaying</span></div>
+      </div>
+
+      <button class="btn-primary" onclick="goTo(&#39;s4&#39;)" style="margin-top:4px;">Switch to Progressive — save $63/mo →</button>
+      <button class="btn-ghost" onclick="goTo(&#39;s1&#39;)">Maybe later</button>
+      <div style="height:12px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ S4: Confirm ══ -->
+  <div class="screen" id="s4">
+    <div class="ava-header">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span style="opacity:0.6;font-size:13px;">●●●</span></div>
+      </div>
+      <div class="header-bar">
+        <button class="back-btn" onclick="goTo(&#39;s3&#39;)">← Back</button>
+        <div class="header-title">Confirm switch</div>
+        <div style="width:44px;"></div>
+      </div>
+      <div style="margin:0 16px 4px;background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(1).png" width="32" height="32" style="object-fit:contain;" onerror="this.style.display=&#39;none&#39;;this.parentNode.style.background=&#39;#0566B5&#39;;this.parentNode.innerHTML=&#39;&lt;span style=\&#39;font-size:11px;font-weight:800;color:white;\&#39;&gt;PRG&lt;/span&gt;&#39;">
+          </div>
+          <div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:2px;">Switching to</div>
+            <div style="font-size:20px;font-weight:800;color:white;">Progressive</div>
+            <div style="font-family:var(--font-number);font-size:36px;font-weight:700;color:white;line-height:1.1;">$124<span style="font-family:var(--font);font-size:16px;font-weight:500;opacity:0.7;">/mo</span></div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px;">you save</div>
+          <div style="font-family:var(--font-number);font-size:36px;font-weight:700;color:var(--green-light);line-height:1;">$63</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);">per month</div>
+        </div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+
+    <div class="content" style="padding:16px;">
+      <div style="font-size:14px;color:var(--text-light);margin-bottom:12px;">Pre-filled from your Ava profile. Review and tap confirm.</div>
+
+      <div class="card">
+        <div class="card-inner">
+          <div class="field-wrap"><div class="field-label">Full name <span class="field-auto-tag">Auto-filled</span></div><div class="field-value">Marcus D. Williams</div></div>
+          <div class="field-wrap"><div class="field-label">Vehicle <span class="field-auto-tag">Auto-filled</span></div><div class="field-value">2020 Honda Civic LX</div></div>
+          <div class="field-wrap"><div class="field-label">Address <span class="field-auto-tag">Auto-filled</span></div><div class="field-value">2341 N Lincoln Ave, Chicago IL 60614</div></div>
+          <div class="field-wrap" style="margin-bottom:0;"><div class="field-label">Policy start date</div><div class="field-value plain">July 1, 2026</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:8px;">
+        <div class="card-inner" style="padding:14px 16px;">
+          <div class="field-label" style="margin-bottom:10px;">Payment method</div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;padding:11px;border:2px solid var(--primary-light);border-radius:12px;text-align:center;font-size:14px;font-weight:700;color:var(--primary-mid);background:rgba(164,72,255,0.06);display:flex;align-items:center;justify-content:center;gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="2" stroke="#9F40FF" stroke-width="1.3"></rect><path d="M1 6.5h14" stroke="#9F40FF" stroke-width="1.3"></path><rect x="3" y="9" width="3" height="1.5" rx="0.75" fill="#9F40FF"></rect></svg>
+            Visa ··4521
+          </div>
+            <div style="flex:1;padding:11px;border:1.5px solid var(--border);border-radius:12px;text-align:center;font-size:14px;color:var(--text-light);">+ Add new</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin:8px 0;padding:12px 14px;background:rgba(72,163,136,0.08);border-radius:12px;border:1px solid rgba(72,163,136,0.2);font-size:13px;color:#2A6A55;display:flex;flex-direction:column;gap:7px;">
+        <span style="display:flex;align-items:center;gap:7px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#A9EACE"></circle><path d="M4 7l2 2 4-4" stroke="#48A388" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          Ava will cancel your State Farm policy — no calls needed.
+        </span>
+        <span style="display:flex;align-items:center;gap:7px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#A9EACE"></circle><path d="M4 7l2 2 4-4" stroke="#48A388" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          Your coverage won't lapse for a single day.
+        </span>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-light);text-align:center;margin:6px 0 12px;line-height:1.5;padding:0 4px;">
+        By confirming, you authorize Ava to bind this Progressive policy on your behalf and cancel your existing State Farm policy effective July 1, 2026.
+      </div>
+
+      <button class="btn-primary" onclick="goTo(&#39;s4b&#39;)">Confirm — switch to Progressive &amp; save $63/mo ✓</button>
+      <div style="height:12px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ S4b: Interstitial — binding policy ══ -->
+  <div class="screen" id="s4b">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:white;gap:28px;padding:24px;">
+      <div style="background:var(--primary);border-radius:28px;padding:28px 24px;width:260px;display:flex;flex-direction:column;align-items:center;gap:24px;">
+        <div style="background:#0D0022;border-radius:18px;width:212px;height:112px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(0,0,0,0.4);">
+          <div style="text-align:center;">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:0.5px;margin-bottom:10px;text-transform:uppercase;">Switching to</div>
+            <div style="width:48px;height:48px;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+              <img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(1).png" width="34" height="34" style="object-fit:contain;" onerror="this.style.display=&#39;none&#39;;this.parentNode.style.background=&#39;#0566B5&#39;;this.parentNode.innerHTML=&#39;&lt;span style=\&#39;font-size:11px;font-weight:800;color:white;\&#39;&gt;PRG&lt;/span&gt;&#39;">
+            </div>
+            <div style="font-size:22px;font-weight:800;color:white;letter-spacing:-0.5px;">Progressive</div>
+          </div>
+        </div>
+        <div class="interstitial-spinner"></div>
+      </div>
+      <div style="font-size:16px;font-weight:500;color:var(--dark);text-align:center;line-height:1.6;">Binding your new policy &amp;<br>cancelling State Farm...</div>
+    </div>
+  </div>
+
+  <!-- ══ S5: Success + Lapse Verification ══ -->
+  <div class="screen" id="s5">
+    <div class="success-header">
+      <div class="status-bar" style="padding-top:14px;"><span>9:41</span><div class="status-icons"><span style="opacity:0.6;font-size:13px;">●●●</span></div></div>
+      <div style="padding:14px 20px 0;text-align:center;">
+        <!-- Check circle in place of emoji -->
+        <div style="width:52px;height:52px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M5 13l5.5 5.5L21 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <div style="font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:4px;">You switched to Progressive</div>
+        <div style="font-family:var(--font-number);font-size:68px;font-weight:700;color:var(--green-light);line-height:1;letter-spacing:-2px;">$63<span style="font-size:28px;font-family:var(--font);font-weight:700;">/mo</span></div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:4px;">$756/year · $2,268 over 3 years</div>
+      </div>
+      <div style="height:18px;"></div>
+    </div>
+
+    <div class="content" style="padding:16px;">
+
+      <!-- ★ Coverage transfer verification card ★ -->
+      <!-- Rebuilt to match Ava card + row-item pattern from component library -->
+      <div class="transfer-card">
+        <!-- Card header row — matches Ava "Card Row" with left content + right badge -->
+        <div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--dark);">Coverage transfer complete</div>
+            <div style="font-size:13px;color:var(--text-light);margin-top:2px;">No gap in coverage — verified by Ava</div>
+          </div>
+          <div style="background:var(--green-light);color:#2A6A55;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;margin-left:12px;">Verified</div>
+        </div>
+        <!-- Row: new policy — matches Ava "Card Row" list item -->
+        <div class="transfer-row">
+          <div class="transfer-check-circle">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 3.5" stroke="#48A388" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="transfer-row-label">Progressive</div>
+            <div class="transfer-row-sub">New policy · Starts Jul 1, 2026</div>
+          </div>
+          <div class="transfer-row-right" style="color:var(--green);">Active</div>
+        </div>
+        <!-- Row: old policy cancelled -->
+        <div class="transfer-row">
+          <div class="transfer-check-circle">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 3.5" stroke="#48A388" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="transfer-row-label">State Farm</div>
+            <div class="transfer-row-sub">Previous policy · Ends Jun 30, 2026</div>
+          </div>
+          <div class="transfer-row-right" style="color:var(--text-light);">Cancelled</div>
+        </div>
+        <!-- Row: zero gap confirmation — "Link Row" pattern -->
+        <div class="transfer-row" style="background:rgba(72,163,136,0.05);">
+          <div class="transfer-check-circle" style="background:var(--green);flex-shrink:0;">
+            <!-- Shield SVG icon -->
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L2 3.5v4c0 2.8 2.1 5.2 5 5.5 2.9-.3 5-2.7 5-5.5v-4L7 1.5z" stroke="white" stroke-width="1.3" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--green);">Zero coverage gap</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:1px;line-height:1.45;">Progressive midnight Jun 30 → State Farm midnight Jul 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Autopilot — purple card, SVG icons replacing emoji -->
+      <div style="background:var(--primary);border-radius:16px;padding:20px;margin-top:0;margin-bottom:8px;">
+        <!-- Header: eyebrow + ON badge row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);">Insurance Autopilot</div>
+          <div style="background:var(--green);color:white;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;letter-spacing:0.3px;">ON</div>
+        </div>
+        <!-- Item: re-shops — cycle/refresh icon -->
+        <div class="auto-item">
+          <div class="auto-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 9a7 7 0 017-7c2.2 0 4.2 1 5.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round"></path><path d="M16 9a7 7 0 01-7 7c-2.2 0-4.2-1-5.5-2.5" stroke="white" stroke-width="1.5" stroke-linecap="round"></path><path d="M13 2.5l1.5 2.5L12 5.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 15.5l-1.5-2.5L6 12.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div><div class="auto-title">Re-shops every 6 months</div><div class="auto-sub">Next check: Dec 2026 · Compares 20+ carriers for you</div></div>
+        </div>
+        <!-- Item: credit alerts — trending up icon -->
+        <div class="auto-item">
+          <div class="auto-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 13l4.5-4.5 3 3L14 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 6.5h3v3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div><div class="auto-title">Credit-triggered rate alerts</div><div class="auto-sub">Notifies you the moment your score unlocks a better tier</div></div>
+        </div>
+        <!-- Item: 1-tap switch — lightning bolt icon -->
+        <div class="auto-item">
+          <div class="auto-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M10.5 2L4 10h6l-2.5 6L16 8h-6l.5-6z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div><div class="auto-title">1-tap switching, forever</div><div class="auto-sub">When we find savings, switch in seconds — always lapse-free</div></div>
+        </div>
+      </div>
+
+      <!-- Next milestone -->
+      <div class="card" style="margin-bottom:8px;">
+        <div class="card-inner">
+          <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Next savings milestone</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-light);margin-bottom:6px;"><span>Your score: <strong style="color:var(--dark);">672</strong></span><span>Next tier: <strong style="color:var(--primary-light);">700+</strong></span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:65%;"></div></div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:8px;line-height:1.5;">Reaching 700 could unlock another $15–30/mo in savings. Ava will notify you automatically.</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="goTo(&#39;s1&#39;)">Back to home</button>
+      <div style="height:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ S6: Lock Screen — 6 months later, autopilot notification ══ -->
+  <div class="screen" id="s6">
+    <div style="flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+      <!-- Background -->
+      <div style="position:absolute;inset:0;background:linear-gradient(175deg,#1C1A2E 0%,#2A1245 40%,#1A2A3A 100%);"></div>
+      <div style="position:absolute;top:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(120,80,200,0.2) 0%,transparent 65%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:80px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(30,90,120,0.18) 0%,transparent 65%);pointer-events:none;"></div>
+
+      <!-- Status bar -->
+      <div style="position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:16px 28px 0;font-size:15px;font-weight:600;color:white;letter-spacing:-0.3px;">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="white" opacity="0.85"><rect x="0" y="4" width="3" height="8" rx="1"></rect><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"></rect><rect x="9" y="0" width="3" height="12" rx="1"></rect><rect x="13.5" y="1.5" width="3" height="10.5" rx="1" opacity="0.3"></rect></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none" opacity="0.85"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity="0.4"></rect><rect x="2" y="2" width="17" height="8" rx="2" fill="white"></rect><path d="M24 4.5V7.5C24.8 7.2 25.5 6.5 25.5 6C25.5 5.5 24.8 4.8 24 4.5Z" fill="white" opacity="0.4"></path></svg>
+        </div>
+      </div>
+
+      <!-- Time & date — 6 months later -->
+      <div style="position:relative;z-index:1;text-align:center;padding:48px 0 44px;">
+        <div style="font-size:86px;font-weight:200;color:white;line-height:1;letter-spacing:-4px;">9:41</div>
+        <div style="font-size:17px;color:rgba(255,255,255,0.75);margin-top:6px;font-weight:400;">Monday, December 14</div>
+      </div>
+
+      <!-- Notifications -->
+      <div style="position:relative;z-index:1;padding:0 16px;display:flex;flex-direction:column;gap:10px;">
+
+        <!-- Ava autopilot notification -->
+        <div onclick="goTo(&#39;s7&#39;)" style="
+          background:rgba(60,50,80,0.78);
+          backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+          border-radius:16px;overflow:hidden;cursor:pointer;
+          animation:notifDrop 0.45s cubic-bezier(0.34,1.4,0.64,1) 0.2s both;
+        ">
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 5px;">
+            <div style="width:18px;height:18px;background:var(--primary-light);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="white" stroke-width="1.4"></circle><path d="M6 3.5v2.5l1.8 1" stroke="white" stroke-width="1.2" stroke-linecap="round"></path></svg>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.4px;flex:1;">Ava</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);">now</div>
+          </div>
+          <div style="padding:0 14px 13px;">
+            <div style="font-size:15px;font-weight:600;color:white;line-height:1.3;margin-bottom:3px;">Autopilot found you a better rate</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.68);line-height:1.45;">We're switching you from Progressive to GEICO, saving $35/mo. You have 47 hours to review or opt out.</div>
+          </div>
+        </div>
+
+        <!-- Stacked older notification -->
+        <div style="background:rgba(50,50,65,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:16px;overflow:hidden;opacity:0.65;">
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 5px;">
+            <div style="width:18px;height:18px;background:#34C759;border-radius:5px;font-size:10px;display:flex;align-items:center;justify-content:center;">💬</div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.4px;flex:1;">Messages</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.3);">1h ago</div>
+          </div>
+          <div style="padding:0 14px 12px;">
+            <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:2px;">Mom</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.4);">Are you coming for the holidays?</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="flex:1;"></div>
+      <div style="position:relative;z-index:1;text-align:center;padding-bottom:28px;">
+        <div style="width:134px;height:5px;background:rgba(255,255,255,0.25);border-radius:3px;margin:0 auto;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ S7: Auto-switch / Opt-out Chase ══ -->
+  <div class="screen" id="s7">
+
+    <!-- Header -->
+    <div style="background:var(--primary);border-radius:0 0 24px 24px;padding-bottom:20px;flex-shrink:0;">
+      <div class="status-bar" style="padding-top:14px;">
+        <span>9:41</span>
+        <div class="status-icons"><span style="opacity:0.6;font-size:13px;">●●●</span></div>
+      </div>
+      <div class="header-bar">
+        <button class="back-btn" onclick="goTo(&#39;s6&#39;)">← Back</button>
+        <div class="header-title">Autopilot found savings</div>
+        <div style="width:44px;"></div>
+      </div>
+
+      <!-- Countdown -->
+      <div style="display:flex;align-items:center;gap:16px;padding:0 20px;">
+        <div class="countdown-ring">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle cx="44" cy="44" r="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="7"></circle>
+            <circle cx="44" cy="44" r="38" fill="none" stroke="#A9EACE" stroke-width="7" stroke-dasharray="238.8" stroke-dashoffset="59.7" stroke-linecap="round"></circle>
+          </svg>
+          <div class="countdown-inner">
+            <div class="countdown-num">47h</div>
+            <div class="countdown-label">remaining</div>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:22px;font-weight:800;color:white;line-height:1.2;">We're switching<br>you to GEICO</div>
+          <!-- carrier logos small inline -->
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+            <div style="width:22px;height:22px;background:white;border-radius:6px;display:flex;align-items:center;justify-content:center;"><img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(1).png" width="15" height="15" style="object-fit:contain;" onerror="this.parentNode.style.background=&#39;#0566B5&#39;;this.remove()"></div>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <div style="width:22px;height:22px;background:white;border-radius:6px;display:flex;align-items:center;justify-content:center;"><img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(2).png" width="15" height="15" style="object-fit:contain;" onerror="this.parentNode.style.background=&#39;#003087&#39;;this.remove()"></div>
+          </div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.65);margin-top:6px;">Completes Dec 17 at midnight unless you cancel</div>
+        </div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+
+    <div class="content" style="padding:16px;">
+
+      <!-- Switch summary -->
+      <div class="switch-strip">
+        <div class="switch-col">
+          <div class="switch-col-label">Leaving</div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;">
+            <div style="width:24px;height:24px;background:white;border:1.5px solid rgba(0,0,0,0.08);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(1).png" width="16" height="16" style="object-fit:contain;" onerror="this.parentNode.style.background=&#39;#0566B5&#39;;this.remove()"></div>
+            <div class="switch-col-carrier">Progressive</div>
+          </div>
+          <div class="switch-col-price" style="color:var(--text-light);">$134<span style="font-size:13px;font-weight:400;color:var(--text-light);">/mo</span></div>
+          <div style="font-size:11px;color:var(--orange);margin-top:4px;font-weight:600;">↑ Rate increased $10</div>
+        </div>
+        <div class="switch-arrow">→</div>
+        <div class="switch-col">
+          <div class="switch-col-label">Joining</div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;">
+            <div style="width:24px;height:24px;background:white;border:1.5px solid rgba(0,0,0,0.08);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="./Ava · Auto Insurance Prototype_files/apple-touch-icon(2).png" width="16" height="16" style="object-fit:contain;" onerror="this.parentNode.style.background=&#39;#003087&#39;;this.remove()"></div>
+            <div class="switch-col-carrier">GEICO</div>
+          </div>
+          <div class="switch-col-price" style="color:var(--green);">$99<span style="font-size:13px;font-weight:400;color:var(--text-light);">/mo</span></div>
+          <div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:600;">Save $35/mo</div>
+        </div>
+      </div>
+
+      <!-- What Ava has already verified -->
+      <div class="card" style="margin-bottom:8px;">
+        <div class="card-inner" style="padding:14px 16px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-light);margin-bottom:12px;">Already verified by Ava</div>
+
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+            <div style="width:24px;height:24px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--dark);">Coverage matched exactly</div>
+              <div style="font-size:12px;color:var(--text-light);">100/300k liability · $500 deductible · UM included</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+            <div style="width:24px;height:24px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--dark);">Zero coverage gap</div>
+              <div style="font-size:12px;color:var(--text-light);">Progressive ends Dec 16 · GEICO starts Dec 17 · midnight handoff</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+            <div style="width:24px;height:24px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#48A388" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--dark);">Visa ··4521 charged Dec 17</div>
+              <div style="font-size:12px;color:var(--text-light);">Same payment method as before</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Savings running total -->
+      <div style="background:var(--green);border-radius:16px;padding:16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <!-- Dollar coin SVG -->
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8.5" stroke="white" stroke-width="1.5"></circle><path d="M11 6.5v9M8.5 8.5c0-.8.7-1.5 1.5-1.5h2c.8 0 1.5.7 1.5 1.5S13.3 10 12.5 10h-3c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5" stroke="white" stroke-width="1.4" stroke-linecap="round"></path></svg>
+        </div>
+        <div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:2px;">Your lifetime Ava savings</div>
+          <div style="font-family:var(--font-number);font-size:36px;font-weight:700;color:white;line-height:1;">$1,173<span style="font-family:var(--font);font-size:16px;font-weight:500;opacity:0.8;">/yr</span></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:2px;">$756 Progressive + $420 GEICO savings</div>
+        </div>
+      </div>
+
+      <!-- Primary CTA: accelerate -->
+      <button class="btn-primary" onclick="goTo(&#39;s5&#39;)" style="background:var(--green);box-shadow:0 4px 14px rgba(72,163,136,0.35);">
+        Switch now — don't wait 47 hours
+      </button>
+
+      <!-- Opt-outs — present but not primary -->
+      <div style="margin-top:4px;border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+        <div onclick="" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border);">
+          <span style="font-size:15px;font-weight:600;color:var(--dark);">Adjust coverage before switching</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="#736B7C" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        </div>
+        <div onclick="" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border);">
+          <span style="font-size:15px;font-weight:600;color:var(--dark);">Change my savings threshold</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="#736B7C" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        </div>
+        <div onclick="" style="padding:14px 16px;text-align:center;cursor:pointer;">
+          <span style="font-size:15px;font-weight:600;color:#C0392B;">Cancel this switch</span>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-light);text-align:center;margin:12px 0;line-height:1.6;padding:0 8px;">
+        You pre-authorized Ava to switch carriers when savings exceed your $30/mo threshold. You can change or cancel this at any time.
+      </div>
+
+      <div style="height:8px;"></div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<div class="sidebar">
+  <div class="sidebar-title">Member Journey</div>
+
+  <div class="step active" id="nav-s1" onclick="goTo(&#39;s1&#39;)">
+    <div class="step-dot" id="dot-s1">1</div>
+    <div class="step-body"><strong>Ava Home</strong><span>Credit score hits 672. Ava surfaces a rate alert in-app — no user action needed to trigger it.</span></div>
+  </div>
+  <div class="step" id="nav-s2" onclick="goTo(&#39;s2&#39;)">
+    <div class="step-dot" id="dot-s2">2</div>
+    <div class="step-body"><strong>Verify Coverage</strong><span>State Farm detected from bank transactions. Coverage pulled via app connect or manual entry.</span></div>
+  </div>
+  <div class="step" id="nav-s3" onclick="goTo(&#39;s3&#39;)">
+    <div class="step-dot" id="dot-s3">3</div>
+    <div class="step-body"><strong>Quotes</strong><span>5 marketplace carriers (Progressive, GEICO, Liberty Mutual, Mercury, Travelers) vs current State Farm $187/mo.</span></div>
+  </div>
+  <div class="step" id="nav-s4" onclick="goTo(&#39;s4&#39;)">
+    <div class="step-dot" id="dot-s4">4</div>
+    <div class="step-body"><strong>Confirm</strong><span>Pre-filled from Ava data. One tap to bind Progressive. Ava cancels State Farm.</span></div>
+  </div>
+  <div class="step" id="nav-s5" onclick="goTo(&#39;s5&#39;)">
+    <div class="step-dot" id="dot-s5">5</div>
+    <div class="step-body"><strong>Done + Autopilot</strong><span>Progressive bound. State Farm cancellation confirmed. Zero coverage gap verified.</span></div>
+  </div>
+
+  <div class="step" id="nav-s6" onclick="goTo(&#39;s6&#39;)">
+    <div class="step-dot" id="dot-s6">6</div>
+    <div class="step-body"><strong>Push · 6 months later</strong><span>Autopilot re-shops Dec 2026. GEICO beats Progressive by $35/mo — push notification to lock screen.</span></div>
+  </div>
+
+  <div class="step" id="nav-s7" onclick="goTo(&#39;s7&#39;)">
+    <div class="step-dot" id="dot-s7">7</div>
+    <div class="step-body"><strong>Review / Opt out</strong><span>Member taps notification. Progressive → GEICO switch in progress, 47hr window to cancel or adjust.</span></div>
+  </div>
+
+  <div class="sidebar-note">
+    <div class="sidebar-note-title">Automation hooks</div>
+    Bank transactions → carrier + payment<br>
+    App connect → coverage details<br>
+    Credit data → pre-fill bind fields<br>
+    Effective dates → lapse verification<br>
+    6-mo timer → auto re-shop<br>
+    Score milestone → rate alert<br>
+    Pre-auth + threshold → no-click switch
+  </div>
+</div>
+
+<script>
+const screens = ['s1','s2','s3','s4','s5','s6','s7'];
+const interstitials = new Set(['s2b','s4b']);
+let current = 's1';
+
+function goTo(id) {
+  document.getElementById(current).classList.remove('active');
+  // Only update sidebar for real steps, not interstitials
+  if (!interstitials.has(id)) {
+    const nextIdx = screens.indexOf(id);
+    screens.forEach((s, i) => {
+      const nav = document.getElementById('nav-' + s);
+      const dot = document.getElementById('dot-' + s);
+      nav.classList.remove('active','done');
+      if (i < nextIdx) { nav.classList.add('done'); dot.textContent = '✓'; }
+      else { dot.textContent = i + 1; }
+    });
+    document.getElementById('nav-' + id).classList.add('active');
+  }
+  current = id;
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).scrollTop = 0;
+  // Auto-advance interstitials
+  if (id === 's2b') setTimeout(() => goTo('s3'), 2500);
+  if (id === 's4b') setTimeout(() => goTo('s5'), 2500);
+}
+
+function toggleManual() {
+  const form = document.getElementById('manualForm');
+  const chevron = document.getElementById('chevron');
+  const isOpen = form.classList.toggle('open');
+  chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0)';
+}
+</script>
+
+<!-- Carrier logos load from Clearbit when online; onerror fallback shows brand-colored initials badge -->
+
+
+</body></html>
